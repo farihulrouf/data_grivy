@@ -1,5 +1,3 @@
-// app.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -46,9 +44,14 @@ mongoose.connect(process.env.MONGODB_URI, {
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+// Route for root URL
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+
 // Start the server
 app.listen(process.env.PORT || 3000, () => {
-  console.log('Server is running');
+  console.log('Server is running on port', process.env.PORT || 3000);
 });
 
 module.exports = app;
