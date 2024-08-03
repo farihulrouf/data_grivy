@@ -1,9 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const cors = require('cors');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
-//const businessRoutes = require('../routes/businessRoutes');
 const businessRoutes = require('../routes/businessRoutes');
 require('dotenv').config();
 
@@ -19,6 +19,13 @@ const app = express();
 
 // Middleware to parse JSON
 app.use(express.json());
+
+// Middleware to handle CORS
+app.use(cors({
+  origin: '*', // Ganti '*' dengan domain frontend Anda jika diperlukan
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 // Set up Multer storage for Cloudinary
 const storage = new CloudinaryStorage({
