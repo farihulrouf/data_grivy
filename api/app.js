@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
-const businessRoutes = require('./routes/businessRoutes');
+//const businessRoutes = require('../routes/businessRoutes');
+const businessRoutes = require('../routes/businessRoutes');
 require('dotenv').config();
 
 // Initialize Cloudinary
