@@ -27,24 +27,37 @@ exports.register = async (req, res) => {
 
 // Login pengguna
 exports.login = async (req, res) => {
+  console.log('Request Body:', req.body); // Debugging untuk melihat isi req.body
   const { username, password } = req.body;
+  console.log("cek one", req.body.email); // Menampilkan username dan password
 
-  // Cek apakah pengguna ada
+  // Cek apakah username dan password ada
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username dan password harus diisi.' });
+  }
+
   const user = await User.findOne({ username });
   if (!user) {
     return res.status(400).json({ message: 'Pengguna tidak ditemukan.' });
   }
 
-  // Cek password
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    return res.status(400).json({ message: 'Password salah.' });
+  console.log('User found:', user); // Debugging untuk melihat data pengguna
+  console.log('Password in DB:', user.password); // Debugging
+
+  try {
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password comparison result:', isMatch); // Debugging hasil perbandingan
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Password salah.' });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+      expiresIn: '1h',
+    });
+
+    res.json({ token });
+  } catch (error) {
+    console.error('Error comparing passwords:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
-
-  // Buat dan tanda tangani JWT
-  const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
-    expiresIn: '1h',
-  });
-
-  res.json({ token });
 };
